@@ -65,7 +65,7 @@ class BilibiliDownloader:
     def get_exist_video(self) -> None:
         if not os.path.exists(self.base_save_dir):
             os.makedirs(self.base_save_dir)
-        return glob(f"**/*.{self.remux_format}", recursive=True)
+        return glob(os.path.join(self.base_save_dir, f"**/*.{self.remux_format}"), recursive=True)
 
     def check_exist(self, video_id: str) -> bool:
         for video in self.video_list:
@@ -114,7 +114,7 @@ class BilibiliDownloader:
                 author = video_item.find('author').text
                 video_id = guid.split('/')[-1]
                 if self.check_exist(video_id=video_id):
-                    print(f"{title} exists continue")
+                    logger.info(f"{title} exists continue")
                     continue
                 self.download(guid, os.path.join(self.base_save_dir, author))
 
@@ -126,7 +126,7 @@ class BiliBiliSub(_PluginBase):
     # 插件图标
     plugin_icon = "Bililive_recorder_A.png"
     # 插件版本
-    plugin_version = "2.1"
+    plugin_version = "2.2"
     # 插件作者
     plugin_author = "zerowang"
     # 作者主页
