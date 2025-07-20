@@ -1045,7 +1045,7 @@
     "name": "BiliBili订阅",
     "description": "B站UP主投稿视频订阅",
     "labels": "订阅",
-    "version": "1.0",
+    "version": "2.1",
     "icon": "Bililive_recorder_A.jpg",
     "author": "zerowang",
     "level": 1,

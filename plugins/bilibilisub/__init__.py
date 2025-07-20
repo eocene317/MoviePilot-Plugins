@@ -36,6 +36,7 @@ class BilibiliDownloaderConfig:
     base_save_dir: str
     remux_format: str
     cookies_file: str
+    ytdlp_params: str
 
 class BilibiliDownloader:
     def __init__(self, config: BilibiliDownloaderConfig, event: Event):
@@ -45,6 +46,7 @@ class BilibiliDownloader:
         self.remux_format = config.remux_format
         self.cookies_file = config.cookies_file
         self.event = event
+        self.ytdlp_params = config.ytdlp_params if config.ytdlp_params else ""
         self.check_params()
         self.video_list = self.get_exist_video()
     
@@ -91,7 +93,7 @@ class BilibiliDownloader:
         return proc.returncode
     
     def download(self, url, save_dir):
-        cmd = f"yt-dlp -f bestvideo+bestaudio {url} --cookies {self.cookies_file} -P {save_dir} -t {self.remux_format}"
+        cmd = f"yt-dlp -f bestvideo+bestaudio {self.ytdlp_params} {url} --cookies {self.cookies_file} -P {save_dir} -t {self.remux_format}"
         # sp.run(cmd, shell=True)
         BilibiliDownloader.run_process_with_event(cmd, self.event)
 
@@ -124,7 +126,7 @@ class BiliBiliSub(_PluginBase):
     # 插件图标
     plugin_icon = "Bililive_recorder_A.png"
     # 插件版本
-    plugin_version = "1.0"
+    plugin_version = "2.1"
     # 插件作者
     plugin_author = "zerowang"
     # 作者主页
@@ -142,6 +144,7 @@ class BiliBiliSub(_PluginBase):
 
     _enabled = False
     _sublist = None
+    _ytdlp_params = ""
     _rsshub_baseurl = None
     _base_save_dir = None
     _remux_format = None
@@ -169,6 +172,7 @@ class BiliBiliSub(_PluginBase):
             self._cookies_file = config.get("cookies_file")
             self._run_once = config.get("run_once")
             self._cron = config.get("cron")
+            self._ytdlp_params = config.get("ytdlp_params")
 
         if self._enabled and not self.check_params():
             logger.warning(f"[BilibiliSubscribe] check params error")
@@ -207,6 +211,7 @@ class BiliBiliSub(_PluginBase):
             "cookies_file": self._cookies_file,
             "run_once": self._run_once,
             "cron": self._cron,
+            "ytdlp_params": self._ytdlp_params
         })
 
     def get_service(self) -> List[Dict[str, Any]]:
@@ -249,7 +254,8 @@ class BiliBiliSub(_PluginBase):
             rsshub_baseurl = self._rsshub_baseurl,
             base_save_dir = self._base_save_dir,
             remux_format = self._remux_format,
-            cookies_file = self._cookies_file
+            cookies_file = self._cookies_file,
+            ytdlp_params = self._ytdlp_params
         )
         try:
             bd = BilibiliDownloader(conf, self._event)
@@ -401,6 +407,23 @@ class BiliBiliSub(_PluginBase):
                                         }
                                     }
                                 ]
+                            }
+                        ]
+                    },
+                    {
+                        'component': 'VCol',
+                        'props': {
+                            'cols': 12
+                        },
+                        'content': [
+                            {
+                                'component': 'VTextarea',
+                                'props': {
+                                    'model': 'ytdlp_params',
+                                    'label': '额外yt-dlp参数',
+                                    'rows': 1,
+                                    'placeholder': ''
+                                }
                             }
                         ]
                     },
