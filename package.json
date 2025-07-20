@@ -1040,5 +1040,15 @@
     "author": "cddjr",
     "level": 1,
     "v2": true
+  },
+  "BiliBiliSub": {
+    "name": "BiliBili订阅",
+    "description": "B站UP主投稿视频订阅",
+    "labels": "订阅",
+    "version": "1.0",
+    "icon": "Bililive_recorder_A.jpg",
+    "author": "zerowang",
+    "level": 1,
+    "v2": true
   }
 }
